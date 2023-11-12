@@ -45,7 +45,14 @@ const useDynamicInputs = ({ model, emptyData }: DynamicInputsProps): DynamicInpu
 	}, [])
 
 	const handleRemoveInputs = useCallback((i: number) => {
-		unsetData(`${inputModel}[${i}]`)
+		const data = getData(inputModel)
+		if(data[i] && data[i].id) {
+			// If the input has an existing record, set a `_destroy: true` flag
+			setData(`${inputModel}[${i}]._destroy`, true)
+		} else {
+			// If the input doesn't have an existing record, remove it from the array
+			unsetData(`${inputModel}[${i}]`)
+		}
 	}, [])
 
 	const data = getData(inputModel)
