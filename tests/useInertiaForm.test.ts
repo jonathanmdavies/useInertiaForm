@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks'
 import { router } from '@inertiajs/core'
-import { useInertiaForm } from '../src'
+import { useDynamicInputs, useInertiaForm } from '../src'
 import { get } from 'lodash'
 
 type InitialData = {
@@ -290,6 +290,23 @@ describe('submit', () => {
 			result.current.transform(data => ({ ...data, transformed: 'value' }))
 			result.current.submit('post', '/form')
 			expect(mockRequest).toBeCalled()
+		})
+	})
+})
+
+
+describe('useDynamicInputs', () => {
+	it('should add and remove inputs correctly', () => {
+		const { result } = renderHook(() => useDynamicInputs({ model: 'test', emptyData: {} }))
+
+		act(() => {
+			result.current.addInput()
+			expect(result.current.paths.length).toEqual(1)
+		})
+
+		act(() => {
+			result.current.removeInput(0)
+			expect(result.current.paths.length).toEqual(0)
 		})
 	})
 })
